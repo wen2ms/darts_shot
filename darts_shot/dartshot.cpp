@@ -1,12 +1,11 @@
 #include "dartshot.h"
 
 #include <opencv2/opencv.hpp>
-#include <QThread>
 #include <QDebug>
 
-DartShot::DartShot(int camera_index, QObject *parent) : QObject{parent}, camera_index_(camera_index) {}
+DartShot::DartShot(int camera_index, QObject *parent) : QThread{parent}, camera_index_(camera_index) {}
 
-void DartShot::working() {
+void DartShot::run() {
     qDebug() << "The dart shoting thread:" << QThread::currentThread();
     
     cv::VideoCapture capture(camera_index_);

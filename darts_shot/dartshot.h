@@ -1,15 +1,18 @@
 #ifndef DARTSHOT_H
 #define DARTSHOT_H
 
-#include <QObject>
+#include <QThread>
 #include <QImage>
 
-class DartShot : public QObject {
+class DartShot : public QThread {
     Q_OBJECT
   public:
     explicit DartShot(int camera_index, QObject *parent = nullptr);
     
-    void working();
+    inline void stop_shot() {is_running_ = false;}
+    
+  protected:
+    void run() override;
 
   signals:
     void frame_ready(QImage);

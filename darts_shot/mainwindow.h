@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLabel>
+
+#include "dartshot.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,5 +21,8 @@ class MainWindow : public QMainWindow {
 
   private:
     Ui::MainWindow *ui;
+    
+    QList<QLabel*> camera_labels_;
+    QList<DartShot*> dart_shot_threads_;
 };
 #endif  // MAINWINDOW_H
