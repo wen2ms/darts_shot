@@ -11,6 +11,9 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     
+    ui->progressBar->setRange(0, 100);
+    ui->progressBar->setValue(0);
+    
     camera_labels_.push_back(ui->camera_0);
     camera_labels_.push_back(ui->camera_1);
     camera_labels_.push_back(ui->camera_2);
