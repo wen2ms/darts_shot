@@ -1,8 +1,12 @@
 #include "mainwindow.h"
 
 #include <QPixmap>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include "./ui_mainwindow.h"
+
+#include "saveframe.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -38,4 +42,74 @@ MainWindow::~MainWindow() {
         thread->wait();
         thread->deleteLater();
     }
+}
+
+void MainWindow::on_shot_clicked() {
+    QString file_path = ui->file_path->text();
+    
+    qDebug() << "saving frames...";
+    
+    ui->progressBar->setValue(0);
+    
+    QVector<QImage> frames;
+    
+    for (int i = 0; i < camera_labels_.size(); ++i) {
+        QImage frame_image = camera_labels_[i]->pixmap().toImage();
+        
+        frames.push_back(frame_image);
+    }
+    
+    SaveFrame* save_frame_thread = new SaveFrame(frames, file_path);
+    
+    connect(save_frame_thread, &SaveFrame::current_percent, ui->progressBar, &QProgressBar::setValue);
+    
+    connect(save_frame_thread, &QThread::finished, this, [=]() {
+        save_frame_thread->quit();
+        save_frame_thread->wait();
+        save_frame_thread->deleteLater();
+    });
+    
+    save_frame_thread->start();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent* event) {
+    if (event->key() == Qt::Key_Enter) {
+        QString file_path = ui->file_path->text();
+        
+        qDebug() << "saving frames...";
+        
+        ui->progressBar->setValue(0);
+        
+        QVector<QImage> frames;
+        
+        for (int i = 0; i < camera_labels_.size(); ++i) {
+            QImage frame_image = camera_labels_[i]->pixmap().toImage();
+            
+            frames.push_back(frame_image);
+        }
+        
+        SaveFrame* save_frame_thread = new SaveFrame(frames, file_path);
+        
+        connect(save_frame_thread, &SaveFrame::current_percent, ui->progressBar, &QProgressBar::setValue);
+        
+        connect(save_frame_thread, &QThread::finished, this, [=]() {
+            save_frame_thread->quit();
+            save_frame_thread->wait();
+            save_frame_thread->deleteLater();
+        });
+        
+        save_frame_thread->start();
+    }
+}
+
+void MainWindow::on_set_file_clicked() {
+    QString file_path = QFileDialog::getOpenFileName();
+    
+    if (file_path.isEmpty()) {
+        QMessageBox::warning(this, "Open File", "The file path selected cannot be empty");
+        
+        return;
+    }
+    
+    ui->file_path->setText(file_path);
 }

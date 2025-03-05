@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QKeyEvent>
 
 #include "dartshot.h"
 
@@ -18,7 +19,15 @@ class MainWindow : public QMainWindow {
   public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    
+  protected:
+    void keyPressEvent(QKeyEvent* event) override;
+    
+  private slots:
+    void on_shot_clicked();
+    
+    void on_set_file_clicked();
+    
   private:
     Ui::MainWindow *ui;
     
