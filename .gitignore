@@ -121,3 +121,7 @@ compile_commands.json
 .vscode
 
 build
+
+# collections
+images
+labels

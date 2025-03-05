@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QKeyEvent>
+#include <QVector>
 
 #include "dartshot.h"
 
@@ -33,5 +34,6 @@ class MainWindow : public QMainWindow {
     
     QList<QLabel*> camera_labels_;
     QList<DartShot*> dart_shot_threads_;
+    QVector<QImage> original_images_;
 };
 #endif  // MAINWINDOW_H

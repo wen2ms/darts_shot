@@ -8,7 +8,7 @@
 
 #include "saveframe.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow), original_images_(3) {
     ui->setupUi(this);
     
     ui->progressBar->setRange(0, 100);
@@ -18,13 +18,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     camera_labels_.push_back(ui->camera_1);
     camera_labels_.push_back(ui->camera_2);
     
-    for (int i = 0; i < 3; ++i) {
-        camera_labels_[i]->setFixedSize(640, 480);
+    for (int i = 0; i < camera_labels_.size(); ++i) {
+        camera_labels_[i]->setFixedSize(320, 240);
         
         DartShot* dart_shot_thread = new DartShot(i);
         
         connect(dart_shot_thread, &DartShot::frame_ready, this, [=](const QImage& frame) {
-            camera_labels_[i]->setPixmap(QPixmap::fromImage(frame));
+            QImage scaled_frame = frame.scaled(320, 240, Qt::KeepAspectRatio);
+            
+            camera_labels_[i]->setPixmap(QPixmap::fromImage(scaled_frame));
+            
+            original_images_[i] = frame;
         });
         
         dart_shot_threads_.push_back(dart_shot_thread);
@@ -54,15 +58,7 @@ void MainWindow::on_shot_clicked() {
     
     ui->progressBar->setValue(0);
     
-    QVector<QImage> frames;
-    
-    for (int i = 0; i < camera_labels_.size(); ++i) {
-        QImage frame_image = camera_labels_[i]->pixmap().toImage();
-        
-        frames.push_back(frame_image);
-    }
-    
-    SaveFrame* save_frame_thread = new SaveFrame(frames, file_path);
+    SaveFrame* save_frame_thread = new SaveFrame(original_images_, file_path);
     
     connect(save_frame_thread, &SaveFrame::current_percent, ui->progressBar, &QProgressBar::setValue);
     
@@ -83,15 +79,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
         
         ui->progressBar->setValue(0);
         
-        QVector<QImage> frames;
-        
-        for (int i = 0; i < camera_labels_.size(); ++i) {
-            QImage frame_image = camera_labels_[i]->pixmap().toImage();
-            
-            frames.push_back(frame_image);
-        }
-        
-        SaveFrame* save_frame_thread = new SaveFrame(frames, file_path);
+        SaveFrame* save_frame_thread = new SaveFrame(original_images_, file_path);
         
         connect(save_frame_thread, &SaveFrame::current_percent, ui->progressBar, &QProgressBar::setValue);
         

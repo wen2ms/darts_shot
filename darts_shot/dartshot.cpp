@@ -26,7 +26,7 @@ void DartShot::run() {
             
             msleep(30);
         }
-        
-        capture.release();
     }
+    
+    capture.release();
 }
