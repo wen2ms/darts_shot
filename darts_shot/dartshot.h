@@ -15,7 +15,7 @@ class DartShot : public QThread {
     void run() override;
 
   signals:
-    void frame_ready(QImage);
+    void frame_ready(const QImage&);
     
   private:
     int camera_index_;

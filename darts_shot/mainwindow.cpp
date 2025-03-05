@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             
             camera_labels_[i]->setPixmap(QPixmap::fromImage(scaled_frame));
             
-            original_images_[i] = frame;
+            original_images_[i] = frame.copy();
         });
         
         dart_shot_threads_.push_back(dart_shot_thread);
@@ -57,7 +57,7 @@ void MainWindow::on_shot_clicked() {
     qDebug() << "saving frames...";
     
     ui->progressBar->setValue(0);
-    
+        
     SaveFrame* save_frame_thread = new SaveFrame(original_images_, file_path);
     
     connect(save_frame_thread, &SaveFrame::current_percent, ui->progressBar, &QProgressBar::setValue);
@@ -72,7 +72,7 @@ void MainWindow::on_shot_clicked() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {
-    if (event->key() == Qt::Key_Enter) {
+    if (event->key() == Qt::Key_Return) {
         QString file_path = ui->file_path->text();
         
         qDebug() << "saving frames...";
@@ -94,7 +94,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
 }
 
 void MainWindow::on_set_file_clicked() {
-    QString file_path = QFileDialog::getOpenFileName();
+    QString file_path = QFileDialog::getExistingDirectory(this, "Select Directory");
     
     if (file_path.isEmpty()) {
         QMessageBox::warning(this, "Open File", "The file path selected cannot be empty");
@@ -102,5 +102,5 @@ void MainWindow::on_set_file_clicked() {
         return;
     }
     
-    ui->file_path->setText(file_path);
+    ui->file_path->setText(file_path);   
 }

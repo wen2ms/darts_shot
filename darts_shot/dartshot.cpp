@@ -22,7 +22,9 @@ void DartShot::run() {
         if (!frame.empty()) {
             cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
             
-            emit frame_ready(QImage(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888));
+            QImage frame_image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+            
+            emit frame_ready(frame_image);
             
             msleep(30);
         }
