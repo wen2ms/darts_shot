@@ -24,7 +24,7 @@ void DartShot::run() {
             
             emit frame_ready(QImage(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888));
             
-            QThread::msleep(30);
+            msleep(30);
         }
         
         capture.release();
