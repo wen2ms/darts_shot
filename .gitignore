@@ -123,5 +123,5 @@ compile_commands.json
 build
 
 # collections
-images
-labels
+darts_shot_dataset
+darts_shot_sub_dataset
