@@ -2,17 +2,17 @@ import os
 import shutil
 import json
 
-subset_dir = 'darts_shot_sub_dataset'
+subset_dir = 'deep_darts_d2_dataset'
 
-train_image_dir = os.path.join(subset_dir, 'images', 'train_split')
-val_image_dir = os.path.join(subset_dir, 'images', 'val_split')
-train_json_dir = os.path.join(subset_dir, 'json_labels', 'train_split')
-val_json_dir = os.path.join(subset_dir, 'json_labels', 'val_split')
+train_image_dir = os.path.join(subset_dir, 'images', 'train')
+val_image_dir = os.path.join(subset_dir, 'images', 'val')
+train_json_dir = os.path.join(subset_dir, 'labels', 'train')
+val_json_dir = os.path.join(subset_dir, 'labels', 'val')
 
 bbox_class = {'dartboard' : 0}
-keypoints_class = ['top']
+keypoints_class = ['top', 'bottom', 'left', 'right']
 
-darts_shot_150_dataset = 'darts_shot_150_dataset'
+darts_shot_150_dataset = 'deep_darts_d2_dataset_final'
 
 final_train_image_dir = os.path.join(darts_shot_150_dataset, 'images', 'train')
 final_val_image_dir = os.path.join(darts_shot_150_dataset, 'images', 'val')
@@ -71,18 +71,18 @@ def lableme2yolo(src_json_path, dst_yolo_path):
 def copy_convert_files(file_list, src_img_dir, src_json_dir, dst_img_dir, dst_yolo_dir):
     for file in file_list:
         src_img_path = os.path.join(src_img_dir, file)
-        src_json_path = os.path.join(src_json_dir, file.replace('.png', '.json'))
+        src_json_path = os.path.join(src_json_dir, file.replace('.JPG', '.json'))
 
         dst_img_path = os.path.join(dst_img_dir, file)
-        dst_yolo_path = os.path.join(dst_yolo_dir, file.replace('.png', '.txt'))
+        dst_yolo_path = os.path.join(dst_yolo_dir, file.replace('.JPG', '.txt'))
 
         lableme2yolo(src_json_path, dst_yolo_path)
 
         if os.path.exists(src_img_path):
             shutil.copy2(src_img_path, dst_img_path)
 
-train_images = [file for file in os.listdir(train_image_dir) if file.endswith('.png')]
-val_images = [file for file in os.listdir(val_image_dir) if file.endswith('.png')]
+train_images = [file for file in os.listdir(train_image_dir) if file.endswith('.JPG')]
+val_images = [file for file in os.listdir(val_image_dir) if file.endswith('.JPG')]
 
 copy_convert_files(train_images, train_image_dir, train_json_dir, final_train_image_dir, final_train_yolo_dir)
 copy_convert_files(val_images, val_image_dir, val_json_dir, final_val_image_dir, final_val_yolo_dir)
