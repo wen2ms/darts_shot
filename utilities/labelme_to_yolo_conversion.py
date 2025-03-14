@@ -2,22 +2,22 @@ import os
 import shutil
 import json
 
-subset_dir = 'deep_darts_d2_dataset'
+input_dataset_dir = 'deep_darts_d2_dataset'
 
-train_image_dir = os.path.join(subset_dir, 'images', 'train')
-val_image_dir = os.path.join(subset_dir, 'images', 'val')
-train_json_dir = os.path.join(subset_dir, 'labels', 'train')
-val_json_dir = os.path.join(subset_dir, 'labels', 'val')
+train_image_dir = os.path.join(input_dataset_dir, 'images', 'train')
+val_image_dir = os.path.join(input_dataset_dir, 'images', 'val')
+train_json_dir = os.path.join(input_dataset_dir, 'labels', 'train')
+val_json_dir = os.path.join(input_dataset_dir, 'labels', 'val')
 
 bbox_class = {'dartboard' : 0}
 keypoints_class = ['top', 'bottom', 'left', 'right']
 
-darts_shot_150_dataset = 'deep_darts_d2_dataset_final'
+output_dataset_dir = 'deep_darts_d2_dataset_final'
 
-final_train_image_dir = os.path.join(darts_shot_150_dataset, 'images', 'train')
-final_val_image_dir = os.path.join(darts_shot_150_dataset, 'images', 'val')
-final_train_yolo_dir = os.path.join(darts_shot_150_dataset, 'labels', 'train')
-final_val_yolo_dir = os.path.join(darts_shot_150_dataset, 'labels', 'val')
+final_train_image_dir = os.path.join(output_dataset_dir, 'images', 'train')
+final_val_image_dir = os.path.join(output_dataset_dir, 'images', 'val')
+final_train_yolo_dir = os.path.join(output_dataset_dir, 'labels', 'train')
+final_val_yolo_dir = os.path.join(output_dataset_dir, 'labels', 'val')
 
 for dir_path in [final_train_image_dir, final_val_image_dir, final_train_yolo_dir, final_val_yolo_dir]:
     os.makedirs(dir_path, exist_ok=True)
