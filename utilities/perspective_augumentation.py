@@ -71,7 +71,7 @@ def augument_dataset(input_iamge_dir, input_json_dir, output_image_dir, output_j
             save_augmented_data(transformed_image, transformed_keypoints, original_json_data, output_image_path, output_json_path)
 
 def get_perspective_matrix(source_image_path, reference_image_path):
-    with open(source_image_path.replace('.jpg', '.json'), 'r') as infile:
+    with open(source_image_path.replace('.png', '.json'), 'r') as infile:
         source_data = json.load(infile)
 
     source_keypoints = []
@@ -97,7 +97,7 @@ def get_perspective_matrix(source_image_path, reference_image_path):
     
     transformed_image = cv2.warpPerspective(image, perspective_matrix, (width, height))
 
-    transformed_image_path = f'{source_image_path[:-4]}_transformed.jpg'
+    transformed_image_path = f'{source_image_path[:-4]}_transformed.png'
     cv2.imwrite(transformed_image_path, transformed_image)
 
     return perspective_matrix
@@ -108,7 +108,7 @@ input_label_dir = 'deep_darts_d2_dataset_augmented/labels/train'
 output_image_dir = 'deep_darts_d2_dataset_augmented/augmented_images/train'
 output_label_dir = 'deep_darts_d2_dataset_augmented/augmented_labels/train'
 
-perspective_image_path = 'perspective_images/image.jpg'
+perspective_image_path = 'perspective_images/scaled_image.png'
 reference_image_path = 'perspective_images/reference.JPG'
 
 perspective_matrix = get_perspective_matrix(perspective_image_path, reference_image_path)
