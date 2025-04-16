@@ -13,6 +13,8 @@ void DartShot::run() {
     if (!capture.isOpened()) {
         return;
     }
+    capture.set(cv::CAP_PROP_FRAME_WIDTH, 1920);
+    capture.set(cv::CAP_PROP_FRAME_HEIGHT, 1080);
     
     while (is_running_) {
         cv::Mat frame;
