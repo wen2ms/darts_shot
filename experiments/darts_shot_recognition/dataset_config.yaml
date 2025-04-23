@@ -1,0 +1,10 @@
+path: darts_shot_250_dataset
+
+train: images/train
+val: images/val
+test: images/val
+
+kpt_shape: [4, 3]
+
+names: 
+  0: dartboard

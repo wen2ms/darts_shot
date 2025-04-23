@@ -125,4 +125,16 @@ build
 # collections
 darts_shot_dataset
 darts_shot_sub_dataset
-darts_shot_150_dataset
+
+deep_darts_dataset
+deep_darts_d2_dataset
+deep_darts_d1_dataset
+
+deep_darts_d2_dataset_augmented
+
+perspective_images
+
+# training
+
+# label requirements
+label_requirements.md

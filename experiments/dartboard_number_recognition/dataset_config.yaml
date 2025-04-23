@@ -1,0 +1,8 @@
+path: dartboard_number_dataset
+
+train: images/train
+val: images/val
+test: images/val
+
+nc: 2
+names: ['20', '5']
