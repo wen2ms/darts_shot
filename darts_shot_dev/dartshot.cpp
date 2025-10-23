@@ -8,11 +8,15 @@ DartShot::DartShot(int camera_index, QObject *parent) : QThread{parent}, camera_
 void DartShot::run() {
     qDebug() << "The dart shoting thread:" << QThread::currentThread();
     
+    // cv::VideoCapture capture(camera_index_, cv::CAP_DSHOW);
     cv::VideoCapture capture(camera_index_);
     
     if (!capture.isOpened()) {
         return;
     }
+    
+    capture.set(cv::CAP_PROP_FRAME_WIDTH, 800);
+    capture.set(cv::CAP_PROP_FRAME_HEIGHT, 600);
     
     while (is_running_) {
         cv::Mat frame;

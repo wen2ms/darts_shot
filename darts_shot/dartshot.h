@@ -4,15 +4,14 @@
 #include <QThread>
 #include <QImage>
 
-class DartShot : public QThread {
+class DartShot : public QObject {
     Q_OBJECT
   public:
     explicit DartShot(int camera_index, QObject *parent = nullptr);
     
-    inline void stop_shot() {is_running_ = false;}
+    inline void stop_shot() {is_running_ = false;};
     
-  protected:
-    void run() override;
+    void run();
 
   signals:
     void frame_ready(const QImage&);

@@ -21,21 +21,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     for (int i = 0; i < camera_labels_.size(); ++i) {
         camera_labels_[i]->setFixedSize(320, 240);
         
-        DartShot* dart_shot_thread = new DartShot(i);
+        DartShot* dart_shot = new DartShot(i + 1);
+        QThread* dart_shot_thread = new QThread;
         
-        connect(dart_shot_thread, &DartShot::frame_ready, this, [=](const QImage& frame) {
+        dart_shot->moveToThread(dart_shot_thread);
+        
+        connect(dart_shot_thread, &QThread::started, dart_shot, &DartShot::run);
+        
+        connect(dart_shot, &DartShot::frame_ready, this, [=](const QImage& frame) {
             QImage scaled_frame = frame.scaled(320, 240, Qt::KeepAspectRatio);
             
             camera_labels_[i]->setPixmap(QPixmap::fromImage(scaled_frame));
             
             original_images_[i] = frame.copy();
         });
-        
+
+        connect(dart_shot_thread, &QThread::finished, dart_shot, &QObject::deleteLater);
+        dart_shot_thread->start();
         dart_shot_threads_.push_back(dart_shot_thread);
-    }
-    
-    for (auto thread : dart_shot_threads_) {
-        thread->start();
     }
 }
 
@@ -43,8 +46,6 @@ MainWindow::~MainWindow() {
     delete ui;
     
     for (auto thread : dart_shot_threads_) {
-        thread->stop_shot();
-        
         thread->quit();
         thread->wait();
         thread->deleteLater();

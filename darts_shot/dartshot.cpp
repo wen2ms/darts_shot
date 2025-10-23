@@ -3,18 +3,19 @@
 #include <opencv2/opencv.hpp>
 #include <QDebug>
 
-DartShot::DartShot(int camera_index, QObject *parent) : QThread{parent}, camera_index_(camera_index) {}
+DartShot::DartShot(int camera_index, QObject *parent) : QObject{parent}, camera_index_(camera_index) {}
 
 void DartShot::run() {
     qDebug() << "The dart shoting thread:" << QThread::currentThread();
     
+    // cv::VideoCapture capture(camera_index_, cv::CAP_DSHOW);
     cv::VideoCapture capture(camera_index_);
     
     if (!capture.isOpened()) {
         return;
     }
-    capture.set(cv::CAP_PROP_FRAME_WIDTH, 1920);
-    capture.set(cv::CAP_PROP_FRAME_HEIGHT, 1080);
+    capture.set(cv::CAP_PROP_FRAME_WIDTH, 800);
+    capture.set(cv::CAP_PROP_FRAME_HEIGHT, 600);
     
     while (is_running_) {
         cv::Mat frame;
@@ -28,7 +29,7 @@ void DartShot::run() {
             
             emit frame_ready(frame_image);
             
-            msleep(30);
+            QThread::msleep(30);
         }
     }
     

@@ -20,9 +20,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     for (int i = 0; i < camera_labels_.size(); ++i) {
         camera_labels_[i]->setFixedSize(320, 240);
         
-        DartShot* dart_shot_thread = new DartShot(i + 1);
+        DartShot* dart_shot_thread = new DartShot(i + 1, this);
         
-        connect(dart_shot_thread, &DartShot::frame_ready, this, [=](const QImage& frame) {
+        connect(dart_shot_thread, &DartShot::frame_ready, this, [=](QImage frame) {
             QImage scaled_frame = frame.scaled(320, 240, Qt::KeepAspectRatio);
             
             camera_labels_[i]->setPixmap(QPixmap::fromImage(scaled_frame));
@@ -38,9 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
 }
 
-MainWindow::~MainWindow() {
-    delete ui;
-    
+MainWindow::~MainWindow() {    
     for (auto thread : dart_shot_threads_) {
         thread->stop_shot();
         
@@ -48,6 +46,8 @@ MainWindow::~MainWindow() {
         thread->wait();
         thread->deleteLater();
     }
+    
+    delete ui;
 }
 
 void MainWindow::on_shot_clicked() {
@@ -71,7 +71,7 @@ void MainWindow::on_shot_clicked() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {
-    if (event->key() == Qt::Key_Return) {
+    if (event->key() == Qt::Key_Space) {
         QString file_path = ui->file_path->text();
         
         qDebug() << "saving frames...";
