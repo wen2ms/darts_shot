@@ -27,8 +27,6 @@
 ```
 
 拍摄区域名称：`double`，`inner_bullseye`，`inner_single`，`miss`，`mix`，`mix_inner_outer`，`outer_bullseye`，`outer_single`，`triple`.
+
 摄像头编号：0，1，2
 
-
-你要不要我再给你加一个 **界面截图展示区**？
-（你发我一张软件界面图就行）
