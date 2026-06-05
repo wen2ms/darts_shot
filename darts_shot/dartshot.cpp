@@ -14,8 +14,8 @@ void DartShot::run() {
     if (!capture.isOpened()) {
         return;
     }
-    capture.set(cv::CAP_PROP_FRAME_WIDTH, 800);
-    capture.set(cv::CAP_PROP_FRAME_HEIGHT, 600);
+    capture.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
+    capture.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
     
     while (is_running_) {
         cv::Mat frame;
@@ -27,7 +27,7 @@ void DartShot::run() {
             
             QImage frame_image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
             
-            emit frame_ready(frame_image);
+            emit frame_ready(frame_image.copy());
             
             QThread::msleep(30);
         }
