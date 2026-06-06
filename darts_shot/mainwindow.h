@@ -30,6 +30,8 @@ class MainWindow : public QMainWindow {
     void on_set_file_clicked();
     
   private:
+    void save_current_frames();
+    
     Ui::MainWindow *ui;
     
     QList<DartShot*> dart_shots_;

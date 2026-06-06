@@ -66,13 +66,13 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::on_shot_clicked() {
+void MainWindow::save_current_frames() {
     QString file_path = ui->file_path->text();
     
     qDebug() << "saving frames...";
     
     ui->progressBar->setValue(0);
-        
+    
     SaveFrame* save_frame_thread = new SaveFrame(original_images_, file_path);
     
     connect(save_frame_thread, &SaveFrame::current_percent, ui->progressBar, &QProgressBar::setValue);
@@ -86,26 +86,16 @@ void MainWindow::on_shot_clicked() {
     save_frame_thread->start();
 }
 
+void MainWindow::on_shot_clicked() {
+    save_current_frames();
+}
+
 void MainWindow::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Return) {
-        QString file_path = ui->file_path->text();
-        
-        qDebug() << "saving frames...";
-        
-        ui->progressBar->setValue(0);
-        
-        SaveFrame* save_frame_thread = new SaveFrame(original_images_, file_path);
-        
-        connect(save_frame_thread, &SaveFrame::current_percent, ui->progressBar, &QProgressBar::setValue);
-        
-        connect(save_frame_thread, &QThread::finished, this, [=]() {
-            save_frame_thread->quit();
-            save_frame_thread->wait();
-            save_frame_thread->deleteLater();
-        });
-        
-        save_frame_thread->start();
+        save_current_frames();
+        return;
     }
+    QMainWindow::keyPressEvent(event);
 }
 
 void MainWindow::on_set_file_clicked() {

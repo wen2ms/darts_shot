@@ -7,9 +7,12 @@ DartShot::DartShot(int camera_index, QObject *parent) : QObject{parent}, camera_
 
 void DartShot::run() {
     qDebug() << "The dart shoting thread:" << QThread::currentThread();
-    
-    // cv::VideoCapture capture(camera_index_, cv::CAP_DSHOW);
+
+#ifdef _WIN32
+    cv::VideoCapture capture(camera_index_, cv::CAP_DSHOW);
+#else
     cv::VideoCapture capture(camera_index_);
+#endif
     
     if (!capture.isOpened()) {
         return;
