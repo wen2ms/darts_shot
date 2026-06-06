@@ -32,6 +32,8 @@ class MainWindow : public QMainWindow {
   private:
     Ui::MainWindow *ui;
     
+    QList<DartShot*> dart_shots_;
+    QList<QWidget*> camera_widgets_;
     QList<QLabel*> camera_labels_;
     QList<QThread*> dart_shot_threads_;
     QVector<QImage> original_images_;

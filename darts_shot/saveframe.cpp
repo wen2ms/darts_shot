@@ -14,7 +14,7 @@ void SaveFrame::run() {
         if (frames_[i].save(file_name)) {
             qDebug() << "saved:" << file_name;
             
-            emit current_percent((i + 1) * 33);
+            emit current_percent((i + 1) * 100 / frames_.size());
         }
         
         msleep(500);

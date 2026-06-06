@@ -8,17 +8,27 @@
 
 #include "saveframe.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow), original_images_(3) {
+static constexpr int kCameraCount = 2;
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow), original_images_(kCameraCount) {
     ui->setupUi(this);
     
     ui->progressBar->setRange(0, 100);
     ui->progressBar->setValue(0);
     
+    camera_widgets_.push_back(ui->camera_widget_0);
+    camera_widgets_.push_back(ui->camera_widget_1);
+    camera_widgets_.push_back(ui->camera_widget_2);
+    
     camera_labels_.push_back(ui->camera_0);
     camera_labels_.push_back(ui->camera_1);
     camera_labels_.push_back(ui->camera_2);
     
-    for (int i = 0; i < camera_labels_.size(); ++i) {
+    for (int i = kCameraCount; i < camera_labels_.size(); ++i) {
+        camera_widgets_[i]->hide();
+    }
+    
+    for (int i = 0; i < kCameraCount; ++i) {
         camera_labels_[i]->setFixedSize(320, 240);
         
         DartShot* dart_shot = new DartShot(i + 1);
@@ -38,18 +48,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
         connect(dart_shot_thread, &QThread::finished, dart_shot, &QObject::deleteLater);
         dart_shot_thread->start();
+        dart_shots_.push_back(dart_shot);
         dart_shot_threads_.push_back(dart_shot_thread);
     }
 }
 
 MainWindow::~MainWindow() {
-    delete ui;
+    for (DartShot* dart_shot : dart_shots_) {
+        dart_shot->stop_shot();
+    }
     
     for (auto thread : dart_shot_threads_) {
         thread->quit();
         thread->wait();
-        thread->deleteLater();
+        delete thread;
     }
+    delete ui;
 }
 
 void MainWindow::on_shot_clicked() {
